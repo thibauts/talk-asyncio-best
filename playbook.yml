@@ -1,0 +1,19 @@
+- hosts: all
+  gather_facts: no
+  pre_tasks:
+    - name: 'FIX: install python2 for ansible'
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      register: output
+      changed_when: output.stdout != ''
+      become: yes
+
+    - name: Gathering Facts
+      setup:
+      become: yes
+
+  tasks:
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        state: latest
+      become: yes
